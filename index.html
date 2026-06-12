@@ -654,40 +654,273 @@
     letter-spacing: 0.2em;
   }
 
-  /* ─── LEGEND ─── */
-  .legend {
-    display: flex;
-    gap: 24px;
-    flex-wrap: wrap;
-    padding: 24px 0;
-    border-bottom: 1px solid rgba(186,202,185,0.05);
-    margin-bottom: 8px;
+
+  /* ─── SCROLL PROGRESS ─── */
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--teal-mid), var(--amber));
+    z-index: 200;
+    transition: width 0.1s ease-out;
+    box-shadow: 0 0 8px rgba(166,93,3,0.5);
   }
 
-  .legend-item {
+  /* ─── BACK TO TOP ─── */
+  .back-to-top {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(12,13,11,0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(186,202,185,0.12);
+    color: var(--sage);
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--sage-dim);
-    opacity: 0.6;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 150;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
+    transition: opacity 0.35s ease, transform 0.35s ease, border-color 0.3s ease, background 0.3s ease;
   }
 
-  .legend-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 1px;
+  .back-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .back-to-top:hover {
+    border-color: var(--amber);
+    background: rgba(166,93,3,0.12);
+    color: var(--amber);
+  }
+
+  /* ─── HEADER AMBIENT MOTION ─── */
+  .header-bg {
+    animation: driftGlow 32s ease-in-out infinite alternate;
+  }
+
+  @keyframes driftGlow {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(-1.5%, 1.5%) scale(1.04); }
+    100% { transform: translate(1.5%, -1%) scale(1.02); }
+  }
+
+  .header-title {
+    background: linear-gradient(120deg, var(--white) 40%, var(--sage-dim) 50%, var(--white) 60%);
+    background-size: 220% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: fadeInUp 0.9s 0.2s both, sheen 10s linear infinite;
+  }
+
+  @keyframes sheen {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: -220% 50%; }
+  }
+
+  /* ─── REVEAL ON SCROLL ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.22,0.61,0.36,1), transform 0.7s cubic-bezier(0.22,0.61,0.36,1);
+  }
+
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .seq-card.reveal { transition-delay: var(--reveal-delay, 0s); }
+
+  /* ─── SEQ CARD ENHANCEMENTS ─── */
+  .seq-card {
+    transition: transform 0.4s cubic-bezier(0.22,0.61,0.36,1), background 0.35s ease, border-color 0.35s ease, box-shadow 0.4s ease;
+  }
+
+  .seq-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px -18px rgba(0,0,0,0.7), 0 0 0 1px rgba(186,202,185,0.05);
+  }
+
+  .seq-num-main {
+    transition: text-shadow 0.4s ease, transform 0.4s ease;
+  }
+
+  .seq-card:hover .seq-num-main {
+    text-shadow: 0 0 18px var(--seq-accent, var(--teal-mid));
+    transform: scale(1.08);
+  }
+
+  .seq-card::before {
+    box-shadow: 0 0 14px var(--seq-accent, var(--teal-mid));
+  }
+
+  /* ─── CLARITY: TEXT READABILITY ─── */
+  .seq-argumental {
+    font-size: 14.5px;
+    line-height: 1.8;
+    color: rgba(232,237,232,0.82);
+  }
+
+  .seq-title { line-height: 1.3; }
+
+  .block-intro-text { opacity: 0.92; }
+
+  /* ─── DETAILS SMOOTH OPEN ─── */
+  details.seq-details .seq-details-content {
+    animation: detailsFade 0.4s ease;
+  }
+
+  @keyframes detailsFade {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── HYPOTHESIS BLOCK GLOW ─── */
+  .hypothesis-block::after {
+    animation: glyphPulse 6s ease-in-out infinite;
+  }
+
+  @keyframes glyphPulse {
+    0%, 100% { opacity: 0.08; transform: translateY(-50%) scale(1); }
+    50%      { opacity: 0.16; transform: translateY(-50%) scale(1.06); }
+  }
+
+  /* ─── ACT HEADER LINE ANIMATION ─── */
+  .act-line {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .act-line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(232,237,232,0.35), transparent);
+    transform: translateX(-100%);
+    transition: transform 1.2s cubic-bezier(0.22,0.61,0.36,1);
+  }
+
+  .act-header.in-view .act-line::after {
+    transform: translateX(300%);
+  }
+
+  /* ─── TIMEBAR DOT GLOW ─── */
+  .timebar-dot {
+    box-shadow: 0 0 6px var(--amber);
+  }
+
+  /* ─── COLLAPSIBLE ACT BODY ─── */
+  .act-body {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.6s cubic-bezier(0.22,0.61,0.36,1);
+  }
+
+  .act-body.collapsed {
+    grid-template-rows: 0fr;
+  }
+
+  .act-body-inner {
+    overflow: hidden;
+    min-height: 0;
+    transition: opacity 0.45s ease, transform 0.5s cubic-bezier(0.22,0.61,0.36,1);
+  }
+
+  .act-body.collapsed .act-body-inner {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  /* ─── ACT HEADER AS TOGGLE ─── */
+  .act-header {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .act-header:hover .act-name { color: var(--white); }
+  .act-header:hover .act-line { background: rgba(186,202,185,0.14); }
+
+  .act-toggle {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(186,202,185,0.12);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sage-dim);
+    font-size: 16px;
+    transition: transform 0.5s cubic-bezier(0.22,0.61,0.36,1), border-color 0.3s ease, color 0.3s ease, background 0.3s ease;
+  }
+
+  .act-header:hover .act-toggle {
+    border-color: var(--amber);
+    color: var(--amber);
+    background: rgba(166,93,3,0.08);
+  }
+
+  .act-header[aria-expanded="false"] .act-toggle {
+    transform: rotate(-90deg);
+  }
+
+  /* ─── COLLAPSIBLE SEQ CONTENT ─── */
+  .seq-content {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.5s cubic-bezier(0.22,0.61,0.36,1);
+  }
+
+  .seq-content.collapsed {
+    grid-template-rows: 0fr;
+  }
+
+  .seq-content-inner {
+    overflow: hidden;
+    min-height: 0;
+    transition: opacity 0.4s ease, transform 0.45s cubic-bezier(0.22,0.61,0.36,1);
+  }
+
+  .seq-content.collapsed .seq-content-inner {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  .seq-header {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .seq-toggle-icon {
+    margin-left: 14px;
+    color: var(--sage-dim);
+    font-size: 13px;
+    opacity: 0.6;
+    transition: transform 0.45s cubic-bezier(0.22,0.61,0.36,1), opacity 0.25s ease, color 0.25s ease;
     flex-shrink: 0;
   }
 
-  .ld-step { background: var(--amber); }
-  .ld-slow { background: var(--teal-mid); }
-  .ld-tl   { background: var(--rust); }
-  .ld-obs  { background: var(--sage-dim); }
-  .ld-cont { background: #4a9b8f; }
+  .seq-header:hover .seq-toggle-icon {
+    opacity: 1;
+    color: var(--seq-accent, var(--teal-mid));
+  }
+
+  .seq-card.collapsed .seq-toggle-icon {
+    transform: rotate(-90deg);
+  }
 
   /* ─── RESPONSIVE ─── */
   @media (max-width: 768px) {
@@ -697,13 +930,15 @@
     .divider { margin-left: -24px; margin-right: -24px; }
     .header-stats { gap: 24px; }
     .timebar { gap: 16px; }
-    .legend { gap: 16px; }
     .seq-body { padding: 20px 20px; }
     .block-intro { padding: 20px 20px 20px 24px; }
   }
 </style>
 </head>
 <body>
+
+<div class="progress-bar" id="progressBar"></div>
+<button class="back-to-top" id="backToTop" aria-label="Volver arriba">↑</button>
 
 <!-- ═══ STICKY TIMEBAR ═══ -->
 <nav class="timebar">
@@ -758,7 +993,7 @@
 </header>
 
 <!-- ═══ HIPÓTESIS ═══ -->
-<div class="hypothesis-block">
+<div class="hypothesis-block reveal">
   <div class="hypothesis-label">Hipótesis central</div>
   <p class="hypothesis-text">
     "En Lima, la ciudad distribuye el costo del tiempo de manera desigual: quienes dependen del transporte público y del espacio peatonal pagan con horas de espera, traslado y desgaste corporal, mientras otros sectores lo evitan mediante infraestructura y privilegio urbano. Esta distribución no es accidental: es estructural, territorial y verificable."
@@ -768,30 +1003,26 @@
 <!-- ═══ MAIN ═══ -->
 <main class="main">
 
-  <!-- LEYENDA -->
-  <div class="legend" style="margin-top:40px;">
-    <span class="legend-item"><span class="legend-dot ld-step"></span>Step-printing</span>
-    <span class="legend-item"><span class="legend-dot ld-slow"></span>Cámara lenta</span>
-    <span class="legend-item"><span class="legend-dot ld-tl"></span>Time-lapse</span>
-    <span class="legend-item"><span class="legend-dot ld-obs"></span>Observacional / plano fijo</span>
-    <span class="legend-item"><span class="legend-dot ld-cont"></span>Imagen fluida / contrapunto</span>
-  </div>
 
   <!-- ══════════════════════════════════════════ -->
   <!--  BLOQUE I                                 -->
   <!-- ══════════════════════════════════════════ -->
 
   <div class="act-1">
-    <div class="act-header act-1">
+    <div class="act-header act-1 reveal" data-toggle="act-body-1" role="button" tabindex="0" aria-expanded="false">
       <div class="act-number">I</div>
       <div class="act-info">
         <div class="act-name">La hora cero</div>
         <div class="act-time">00:00:00 — 00:02:30 · 2 min 30 seg</div>
       </div>
       <div class="act-line"></div>
+      <div class="act-toggle"><span class="act-toggle-icon">⌄</span></div>
     </div>
 
-    <div class="block-intro">
+    <div class="act-body collapsed" id="act-body-1">
+      <div class="act-body-inner">
+
+    <div class="block-intro reveal">
       <div class="block-intro-label">Descripción argumental del bloque</div>
       <p class="block-intro-text">Este bloque establece el punto de partida conceptual del documental: la existencia de un tiempo urbano que comienza antes de que la mayoría de la ciudad lo registre. Aborda la noción de "turno" como una asignación desigual que ya está en funcionamiento antes de que los sujetos aparezcan en escena. La idea central es que, para una parte de la población, el costo del desplazamiento no comienza con el viaje, sino con la espera previa, una espera que no es azarosa sino estructural. El bloque funciona como una introducción que niega el relato heroico del "despertar de la ciudad" y propone en su lugar una imagen de Lima como máquina que ya exige cuerpos en la madrugada.</p>
     </div>
@@ -799,17 +1030,20 @@
     <div class="sequences">
 
       <!-- SUBBLOQUE 1.1 -->
-      <div class="seq-card">
+      <div class="seq-card reveal collapsed">
         <div class="seq-num">
           <div class="seq-num-main">1.1</div>
           <div class="seq-num-sub">Preludio</div>
         </div>
         <div class="seq-body">
-          <div class="seq-header">
+          <div class="seq-header" data-toggle="seq">
             <span class="seq-title">Preludio</span>
             <span class="seq-timecode">00:00:00 — 00:00:50</span>
             <span class="seq-duration">50″</span>
+            <span class="seq-toggle-icon">⌄</span>
           </div>
+          <div class="seq-content collapsed">
+            <div class="seq-content-inner">
           <div class="seq-argumental">
           Este subbloque aborda el momento anterior a la aparición del sujeto urbano. Explora la idea de que la ciudad existe como entidad autónoma que opera incluso cuando no hay testigos visibles. El tema central es la indiferencia de la infraestructura: los semáforos, las luces, los transformadores funcionan sin destinatario, como si la ciudad estuviera diseñada para sí misma y no para quienes la habitan. Narrativamente, cumple la función de negar cualquier romanticismo sobre la "madrugada silenciosa" y mostrar en cambio que el sistema ya está extrayendo tiempo de quienes aún están en camino. La relación con el subbloque siguiente es de causalidad: lo que viene es una respuesta a esta ciudad que ya estaba operando. </div>
           <details class="seq-details">
@@ -831,21 +1065,26 @@
               <p>La duplicación de la luz mediante el step-printing sugiere que la ciudad no es una sino varias: existe la que vemos y la que nos mira sin que la veamos. El negro inicial no es vacío sino presencia latente. El zumbido del entorno funciona como metáfora de un sistema que nunca descansa, una conciencia urbana sin sujeto.</p>
             </div>
           </details>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- SUBBLOQUE 1.2 -->
-      <div class="seq-card">
+      <div class="seq-card reveal collapsed">
         <div class="seq-num">
           <div class="seq-num-main">1.2</div>
           <div class="seq-num-sub">Primer turno</div>
         </div>
         <div class="seq-body">
-          <div class="seq-header">
+          <div class="seq-header" data-toggle="seq">
             <span class="seq-title">El primer turno</span>
             <span class="seq-timecode">00:00:50 — 00:02:30</span>
             <span class="seq-duration">1'40″</span>
+            <span class="seq-toggle-icon">⌄</span>
           </div>
+          <div class="seq-content collapsed">
+            <div class="seq-content-inner">
           <div class="seq-argumental">
           Este subbloque aborda el momento en que los cuerpos aparecen en la espera. El tema central es la regularidad de la acumulación: lo que parece desorden o casualidad (gente esperando en un paradero informal a las 4:30 a.m) se revela como un patrón predecible y sistemático. La idea narrativa es que la ciudad no produce individuos con mala suerte, sino masas que obedecen un protocolo no escrito pero estricto. El conflicto explora la tensión entre la espera pasiva (el cuerpo inmóvil) y la agencia ausente: nadie decidió ese horario, pero todos lo cumplen. Su función dentro del relato es mostrar que el "Turno" no es una experiencia individual sino un fenómeno de escala.</div>
           <details class="seq-details">
@@ -867,9 +1106,13 @@
               <p>La acumulación de cuerpos en time-lapse funciona como revelación de lo que a simple vista parece azar: la masa como argumento. El sonido en tiempo real mientras la imagen se acelera produce una disonancia que sugiere que la duración real,&nbsp; el tiempo que esos cuerpos realmente esperan, es insoportablemente larga, y que la imagen sólo puede comprimirla, pero no eliminarla. El paradero como imagen del "no lugar" donde el tiempo se extrae sin compensación.</p>
             </div>
           </details>
+            </div>
+          </div>
         </div>
       </div>
 
+    </div>
+      </div>
     </div>
   </div><!-- / bloque-1 -->
 
@@ -880,16 +1123,20 @@
   <!-- ══════════════════════════════════════════ -->
 
   <div class="act-2">
-    <div class="act-header act-2">
+    <div class="act-header act-2 reveal" data-toggle="act-body-2" role="button" tabindex="0" aria-expanded="false">
       <div class="act-number">II</div>
       <div class="act-info">
         <div class="act-name">El costo corporal</div>
         <div class="act-time">00:02:30 — 00:07:30 · 5 minutos</div>
       </div>
       <div class="act-line"></div>
+      <div class="act-toggle"><span class="act-toggle-icon">⌄</span></div>
     </div>
 
-    <div class="block-intro">
+    <div class="act-body collapsed" id="act-body-2">
+      <div class="act-body-inner">
+
+    <div class="block-intro reveal">
       <div class="block-intro-label">Descripción argumental del bloque</div>
       <p class="block-intro-text">Este bloque aborda la conversión del tiempo en desgaste físico. La idea central es que la ciudad no solo extrae tiempo de quienes la habitan, sino que ese tiempo se manifiesta directamente en el cuerpo: fatiga, riesgo, inestabilidad, tensión. El bloque despliega cuatro subbloques que funcionan como variaciones de un mismo proceso: la espera, el cruce, el confinamiento en el transporte y el contrapunto con el privilegio. Narrativamente, este bloque es el corazón del documental porque es donde la hipótesis se vuelve verificable no mediante datos, sino mediante la evidencia corporal. La función dentro del relato es demostrar que esta extracción no es abstracta sino concreta, y que tiene un correlato físico inmediato.</p>
     </div>
@@ -897,17 +1144,20 @@
     <div class="sequences">
 
       <!-- SUBBLOQUE 2.1 -->
-      <div class="seq-card">
+      <div class="seq-card reveal collapsed">
         <div class="seq-num">
           <div class="seq-num-main">2.1</div>
           <div class="seq-num-sub">La espera</div>
         </div>
         <div class="seq-body">
-          <div class="seq-header">
+          <div class="seq-header" data-toggle="seq">
             <span class="seq-title">La espera: el cuerpo duplicado</span>
             <span class="seq-timecode">00:02:30 — 00:04:00</span>
             <span class="seq-duration">1'30″</span>
+            <span class="seq-toggle-icon">⌄</span>
           </div>
+          <div class="seq-content collapsed">
+            <div class="seq-content-inner">
           <div class="seq-argumental">
             Este subbloque aborda la imposibilidad del movimiento fluido en el espacio público congestionado. El tema es que en ciertos puntos de Lima, el cuerpo no puede avanzar en el tiempo de manera continua: el entorno lo retiene en el instante que ya vivió y lo obliga a repetirlo. El fotograma que se repite es exactamente el tiempo que no se devuelve. Por eso, el step-printing no ilustra esa condición: la reproduce. La idea narrativa es que la espera ya no es solo tiempo muerto, sino tiempo que se incrusta en el cuerpo como una duplicación inútil. El conflicto explora la contradicción entre la intención de avanzar y la realidad del freno constante.
           </div>
@@ -930,21 +1180,26 @@
               <p>La duplicación del cuerpo sugiere que la ciudad exige al peatón estar en dos lugares a la vez: el que ocupa y el que debería ocupar si el tránsito fuera racional. Esa imposibilidad genera una imagen de extrañamiento: el cuerpo ya no es propio, es un objeto que la ciudad procesa mal. El stuttering sonoro refuerza la idea de que el tiempo urbano está fragmentado, no es continuo ni vivible.</p>
             </div>
           </details>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- SUBBLOQUE 2.2 -->
-      <div class="seq-card">
+      <div class="seq-card reveal collapsed">
         <div class="seq-num">
           <div class="seq-num-main">2.2</div>
           <div class="seq-num-sub">El cruce</div>
         </div>
         <div class="seq-body">
-          <div class="seq-header">
+          <div class="seq-header" data-toggle="seq">
             <span class="seq-title">El cruce: la infraestructura que no existe</span>
             <span class="seq-timecode">00:04:00 — 00:05:15</span>
             <span class="seq-duration">1'15″</span>
+            <span class="seq-toggle-icon">⌄</span>
           </div>
+          <div class="seq-content collapsed">
+            <div class="seq-content-inner">
           <div class="seq-argumental">
             Este subbloque aborda el riesgo físico como costo de tiempo. El tema central es que, en ausencia de infraestructura peatonal (semáforos, puentes, pasos cebra), la ciudad convierte el acto más simple como cruzar una calle en una negociación con la muerte. La idea narrativa es que el tiempo que se pierde en la espera se transforma aquí en tiempo de peligro activo: no se trata de esperar pasivamente, sino de calcular un intervalo de vacío entre vehículos. El conflicto es entre la necesidad de llegar que fuerza el cruce y la exposición a un sistema diseñado para el automóvil, no para la persona. Es el punto de máxima tensión física del bloque, donde el desgaste corporal alcanza su forma más visible: el riesgo de accidente.
           </div>
@@ -967,21 +1222,26 @@
               <p>La cámara lenta no es estética sino forense: prolonga el gesto del cruce para revelar el cálculo implícito que la ciudad normaliza. El hecho de que el sonido no cambie después del cruce exitoso sugiere que el sistema no registra el esfuerzo individual; el peatón pudo haber muerto o no, el tráfico sigue igual. La ausencia de infraestructura es aquí una presencia negativa que se siente en cada fotograma.</p>
             </div>
           </details>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- SUBBLOQUE 2.3 -->
-      <div class="seq-card">
+      <div class="seq-card reveal collapsed">
         <div class="seq-num">
           <div class="seq-num-main">2.3</div>
           <div class="seq-num-sub">Interior</div>
         </div>
         <div class="seq-body">
-          <div class="seq-header">
+          <div class="seq-header" data-toggle="seq">
             <span class="seq-title">Interior: el tránsito como confinamiento</span>
             <span class="seq-timecode">00:05:15 — 00:06:20</span>
             <span class="seq-duration">1'05″</span>
+            <span class="seq-toggle-icon">⌄</span>
           </div>
+          <div class="seq-content collapsed">
+            <div class="seq-content-inner">
           <div class="seq-argumental">
             Este subbloque aborda el transporte público como espacio de suspensión. El tema central es que, una vez dentro del vehículo, la ciudad no deja de extraer tiempo: el cuerpo sigue en espera, pero ahora confinado, sin posibilidad de intervenir en la duración del viaje. La idea narrativa es que el desplazamiento no es un movimiento hacia el destino, sino un tiempo muerto que ocurre dentro de una cápsula inestable. El conflicto es entre la promesa del traslado      y la realidad de la demora incontrolable: el tiempo pasa sin que el progreso sea proporcional. Tras mostrar el riesgo externo del subbloque anterior, aquí se muestra el desgaste interno: confinamiento, fatiga postural, inmovilidad forzada.
           </div>
@@ -1003,21 +1263,26 @@
               <p>La ventana como promesa incumplida: la imagen de la ciudad que se mueve sugiere progreso, pero el sonido y la duración real contradicen esa ilusión. Los rostros en primer plano no se presentan como individuos con historia, sino como ejemplos de una condición compartida: estar dentro sin control sobre el afuera. El bamboleo de la cámara no es una decisión estética sino una traducción directa del cuerpo del operador al cuerpo del pasajero.</p>
             </div>
           </details>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- SUBBLOQUE 2.4 -->
-      <div class="seq-card">
+      <div class="seq-card reveal collapsed">
         <div class="seq-num">
           <div class="seq-num-main">2.4</div>
           <div class="seq-num-sub">Contrapunto</div>
         </div>
         <div class="seq-body">
-          <div class="seq-header">
+          <div class="seq-header" data-toggle="seq">
             <span class="seq-title">Contrapunto: el otro modo de llegar</span>
             <span class="seq-timecode">00:06:20 — 00:07:30</span>
             <span class="seq-duration">1'10″</span>
+            <span class="seq-toggle-icon">⌄</span>
           </div>
+          <div class="seq-content collapsed">
+            <div class="seq-content-inner">
           <div class="seq-argumental">
             Este subbloque aborda la desigualdad como diferencia de textura temporal. El tema central es que la misma ciudad, a la misma hora, ofrece un tiempo radicalmente distinto según el lugar y el medio de desplazamiento. La idea narrativa es que no se trata de dos ciudades separadas (Lima pobre y Lima rica), sino de la misma Lima que contiene dos regímenes de temporalidad que no se tocan. El conflicto es implícito: el espectador ya ha visto cuatro minutos de desgaste, y ahora se enfrenta a la fluidez como un hecho material, no como un juicio. Este subbloque no propone una solución ni una crítica explícita; su función es registrar el contraste como evidencia.
           </div>
@@ -1040,9 +1305,13 @@
               <p>La ausencia de step-printing es aquí una decisión con significado: la fluidez temporal es un privilegio que no necesita ser subrayado. El silencio relativo no es paz, es indicador de que el ruido (como el tiempo) se distribuye de manera desigual. El plano cenital sugiere una mirada de sistema: desde arriba, la ciudad parece homogénea; la diferencia solo es visible desde abajo, donde los cuerpos la sufren.</p>
             </div>
           </details>
+            </div>
+          </div>
         </div>
       </div>
 
+    </div>
+      </div>
     </div>
   </div><!-- / bloque-2 -->
 
@@ -1053,16 +1322,20 @@
   <!-- ══════════════════════════════════════════ -->
 
   <div class="act-3">
-    <div class="act-header act-3">
+    <div class="act-header act-3 reveal" data-toggle="act-body-3" role="button" tabindex="0" aria-expanded="false">
       <div class="act-number">III</div>
       <div class="act-info">
         <div class="act-name">La estructura</div>
         <div class="act-time">00:07:30 — 00:10:30 · 3 minutos</div>
       </div>
       <div class="act-line"></div>
+      <div class="act-toggle"><span class="act-toggle-icon">⌄</span></div>
     </div>
 
-    <div class="block-intro">
+    <div class="act-body collapsed" id="act-body-3">
+      <div class="act-body-inner">
+
+    <div class="block-intro reveal">
       <div class="block-intro-label">Descripción argumental del bloque</div>
       <p class="block-intro-text">Este bloque aborda la escala estructural del problema, alejándose del primer plano corporal para mostrar el patrón que organiza la desigualdad. La idea central es que lo que parecía acumulación casual es en realidad un sistema predecible y regular. Los tres subbloques funcionan como un zoom hacia afuera: primero la masa que revela un patrón, luego la dimensión de género como capa adicional del costo, finalmente la mirada distante que muestra la infraestructura como objeto autónomo. La función dentro del relato es pasar de la evidencia corporal a la evidencia estructural: del síntoma a la causa. No son dos Limas accidentales; hay una estructura que produce esa diferencia.</p>
     </div>
@@ -1070,17 +1343,20 @@
     <div class="sequences">
 
       <!-- SUBBLOQUE 3.1 -->
-      <div class="seq-card">
+      <div class="seq-card reveal collapsed">
         <div class="seq-num">
           <div class="seq-num-main">3.1</div>
           <div class="seq-num-sub">Acumulación</div>
         </div>
         <div class="seq-body">
-          <div class="seq-header">
+          <div class="seq-header" data-toggle="seq">
             <span class="seq-title">La acumulación: la escala del patrón</span>
             <span class="seq-timecode">00:07:30 — 00:08:45</span>
             <span class="seq-duration">1'15″</span>
+            <span class="seq-toggle-icon">⌄</span>
           </div>
+          <div class="seq-content collapsed">
+            <div class="seq-content-inner">
           <div class="seq-argumental">
           Este subbloque aborda la regularidad de la concentración humana en puntos específicos de la ciudad. El tema central es que la aglomeración en terminales informales no es desorden, sino un fenómeno estadísticamente predecible que revela la existencia de una demanda no atendida por la infraestructura formal. La idea narrativa es que el tiempo que pierde cada individuo no es mala suerte individual, sino el producto de un sistema que concentra cuerpos en lugares inadecuados durante horas determinadas. El conflicto es entre la percepción cotidiana "esto es un caos" y la realidad estructural: "esto es un patrón". Es el subbloque que cambia la escala, pasando del cuerpo al territorio.</div>
           <details class="seq-details">
@@ -1102,21 +1378,26 @@
               <p>La disonancia entre imagen acelerada y sonido real produce una sensación de extrañamiento: el oído sabe que el tiempo ha sido comprimido, pero la imagen muestra un movimiento que el cuerpo no podría experimentar. Esta disonancia es una metáfora de la relación entre el tiempo real de espera (insoportablemente largo) y la mirada externa que lo reduce a un dato. El time-lapse no acelera el sufrimiento: lo vuelve legible como estructura.</p>
             </div>
           </details>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- SUBBLOQUE 3.2 -->
-      <div class="seq-card">
+      <div class="seq-card reveal collapsed">
         <div class="seq-num">
           <div class="seq-num-main">3.2</div>
           <div class="seq-num-sub">El género</div>
         </div>
         <div class="seq-body">
-          <div class="seq-header">
+          <div class="seq-header" data-toggle="seq">
             <span class="seq-title">El género y el riesgo</span>
             <span class="seq-timecode">00:08:45 — 00:09:45</span>
             <span class="seq-duration">1'00″</span>
+            <span class="seq-toggle-icon">⌄</span>
           </div>
+          <div class="seq-content collapsed">
+            <div class="seq-content-inner">
           <div class="seq-argumental">
           Este subbloque aborda la dimensión de género en el costo del tiempo urbano. El tema central es que la espera no es igual para todos los cuerpos: para las mujeres, el tiempo de espera nocturno incluye un plus de vigilancia, riesgo y tensión que no se mide en minutos. La idea narrativa es que la ciudad exige no solo tiempo, sino también un estado de alerta corporal permanente que tiene género. El conflicto explora la diferencia entre el tiempo cronométrico: cuánto se espera, y el tiempo vivencial: cómo se espera. No todos los que esperan en el terminal esperan de la misma manera. Mientras el bloque II mostraba el desgaste físico general, aquí se muestra un desgaste específico que la ciudad impone de manera diferencial.</div>
           <details class="seq-details">
@@ -1139,21 +1420,26 @@
               <p>La decisión de no señalar explícitamente el dato estadístico es deliberada: la imagen debe hacer visible lo que los números no pueden transmitir. La cámara lenta suave sobre el gesto de alerta convierte un reflejo involuntario en el centro del subbloque. El sonido retirado sugiere que el peligro no necesita ser ruidoso para ser real; a veces el silencio es su forma más eficaz. La espera nocturna como metáfora de una ciudad que nunca garantiza seguridad, solo probabilidades.</p>
             </div>
           </details>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- SUBBLOQUE 3.3 -->
-      <div class="seq-card">
+      <div class="seq-card reveal collapsed">
         <div class="seq-num">
           <div class="seq-num-main">3.3</div>
           <div class="seq-num-sub">La distancia</div>
         </div>
         <div class="seq-body">
-          <div class="seq-header">
+          <div class="seq-header" data-toggle="seq">
             <span class="seq-title">La distancia: la ciudad como sistema</span>
             <span class="seq-timecode">00:09:45 — 00:10:30</span>
             <span class="seq-duration">45″</span>
+            <span class="seq-toggle-icon">⌄</span>
           </div>
+          <div class="seq-content collapsed">
+            <div class="seq-content-inner">
           <div class="seq-argumental">
             Este subbloque aborda la infraestructura como objeto autónomo. El tema central es que la ciudad, vista desde la distancia, revela su naturaleza de máquina que procesa cuerpos sin considerarlos. La idea narrativa es que el diseño urbano (la ubicación de un terminal, la ausencia de un cruce, la continuidad de una vía rápida) no es neutral: tiene una lógica propia que prioriza el flujo vehicular sobre el peatonal, y esa lógica es la causa material de todo lo mostrado antes. El conflicto es entre la escala humana  y la escala del sistema: el territorio que organiza. Es el momento en que la hipótesis se vuelve visible como diseño y no como accidente.
           </div>
@@ -1176,9 +1462,13 @@
               <p>El corte entre la mirada desde arriba y la mirada desde abajo es el núcleo simbólico del subbloque: la ciudad que parece ordenada y fluida desde la altura es la misma que, a nivel del suelo, exige tiempo y riesgo. La referencia a <em>Koyaanisqatsi</em> es aquí tanto técnica como conceptual: la infraestructura no es un escenario neutral, es un personaje que actúa sobre los cuerpos. El rumor unificado desde arriba sugiere que el sistema no escucha las voces individuales; las convierte en estadística.</p>
             </div>
           </details>
+            </div>
+          </div>
         </div>
       </div>
 
+    </div>
+      </div>
     </div>
   </div><!-- / bloque-3 -->
 
@@ -1189,16 +1479,20 @@
   <!-- ══════════════════════════════════════════ -->
 
   <div class="act-4">
-    <div class="act-header act-4">
+    <div class="act-header act-4 reveal" data-toggle="act-body-4" role="button" tabindex="0" aria-expanded="false">
       <div class="act-number">IV</div>
       <div class="act-info">
         <div class="act-name">El turno que no termina</div>
         <div class="act-time">00:10:30 — 00:12:00 · 1 min 30 seg</div>
       </div>
       <div class="act-line"></div>
+      <div class="act-toggle"><span class="act-toggle-icon">⌄</span></div>
     </div>
 
-    <div class="block-intro">
+    <div class="act-body collapsed" id="act-body-4">
+      <div class="act-body-inner">
+
+    <div class="block-intro reveal">
       <div class="block-intro-label">Descripción argumental del bloque</div>
       <p class="block-intro-text">Este bloque aborda la repetición cíclica como característica fundamental de la desigualdad temporal. La idea central es que lo mostrado a lo largo del documental no es un evento puntual ni una historia con resolución, sino un patrón que se reproduce día tras día sin cambios. Narrativamente, este bloque cumple la función de negar cualquier expectativa de catarsis o transformación: la ciudad no aprende, los cuerpos vuelven a esperar, el ciclo se confirma. La relación con el bloque I es especular: el documental termina donde empezó (el paradero, la espera, el step-printing), pero ahora el espectador ya sabe que eso no es un momento del día, sino una condición permanente.</p>
     </div>
@@ -1206,17 +1500,20 @@
     <div class="sequences">
 
       <!-- SUBBLOQUE 4.1 -->
-      <div class="seq-card">
+      <div class="seq-card reveal collapsed">
         <div class="seq-num">
           <div class="seq-num-main">4.1</div>
           <div class="seq-num-sub">El regreso</div>
         </div>
         <div class="seq-body">
-          <div class="seq-header">
+          <div class="seq-header" data-toggle="seq">
             <span class="seq-title">El regreso: el ciclo que se confirma</span>
             <span class="seq-timecode">00:10:30 — 00:11:15</span>
             <span class="seq-duration">45″</span>
+            <span class="seq-toggle-icon">⌄</span>
           </div>
+          <div class="seq-content collapsed">
+            <div class="seq-content-inner">
           <div class="seq-argumental">
             Este subbloque aborda la repetición como evidencia. El tema central es que el mismo lugar, los mismos cuerpos, el mismo tipo de espera se producen nuevamente al final del día, como si el sistema no hubiera registrado nada de lo ocurrido entre la madrugada y la noche. La idea narrativa es que el documental no ha contado la historia de un día excepcional, sino que ha mostrado un fragmento de un ciclo infinito. El conflicto explora la tensión entre el tiempo narrativo y el tiempo estructural: que se repite sin cambios. Es la primera confirmación de que no habrá resolución.
           </div>
@@ -1239,21 +1536,26 @@
               <p>La repetición del encuadre no es un error ni una pereza narrativa: es la tesis visual del documental. El mismo lugar, otra hora, los mismos gestos: eso es la estructura. El step-printing que regresa es la firma de que el tiempo sigue siendo desigual. El espectador debe sentir que ha visto esto antes, y esa sensación de déjà vu es el argumento.</p>
             </div>
           </details>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- SUBBLOQUE 4.2 -->
-      <div class="seq-card">
+      <div class="seq-card reveal collapsed">
         <div class="seq-num">
           <div class="seq-num-main">4.2</div>
           <div class="seq-num-sub">Espera final</div>
         </div>
         <div class="seq-body">
-          <div class="seq-header">
+          <div class="seq-header" data-toggle="seq">
             <span class="seq-title">Espera final: el plano que no resuelve</span>
             <span class="seq-timecode">00:11:15 — 00:11:45</span>
             <span class="seq-duration">30″</span>
+            <span class="seq-toggle-icon">⌄</span>
           </div>
+          <div class="seq-content collapsed">
+            <div class="seq-content-inner">
           <div class="seq-argumental">
             Este subbloque aborda la ausencia de resolución como forma de fidelidad a lo real. El tema central es que el documental no puede mostrar la llegada del bus, el fin de la espera, el momento en que el tiempo es devuelto, porque ese momento no está garantizado. La idea narrativa es que la experiencia de esperar no es un intervalo que conduce a un destino, sino un estado que puede prolongarse indefinidamente sin que nadie rinda cuentas. El conflicto es entre la expectativa narrativa del espectador y la realidad de la ciudad: que no ofrece cierre a quienes esperan. La imagen y el sonido se retiran al mínimo; incluso la técnica parece agotada por la repetición.
           </div>
@@ -1276,21 +1578,26 @@
               <p>El plano que no resuelve es el reverso del plano heroico: no hay llegada, no hay recompensa por la espera. El step-printing casi imperceptible sugiere que incluso la técnica está cansada de mostrarlo. El corte antes de que llegue el bus es la única forma ética de filmar la espera: no simular un final que no existe. La figura solitaria bajo la luz artificial es la última imagen del cuerpo antes de que el documental se retire.</p>
             </div>
           </details>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- SUBBLOQUE 4.3 -->
-      <div class="seq-card">
+      <div class="seq-card reveal collapsed">
         <div class="seq-num">
           <div class="seq-num-main">4.3</div>
           <div class="seq-num-sub">Cierre</div>
         </div>
         <div class="seq-body">
-          <div class="seq-header">
+          <div class="seq-header" data-toggle="seq">
             <span class="seq-title">Datos / Cierre</span>
             <span class="seq-timecode">00:11:45 — 00:12:00</span>
             <span class="seq-duration">15″</span>
+            <span class="seq-toggle-icon">⌄</span>
           </div>
+          <div class="seq-content collapsed">
+            <div class="seq-content-inner">
           <div class="seq-argumental">
             Este subbloque aborda la confirmación estadística de todo lo mostrado. El tema central es que las imágenes no han sido una excepción ni una exageración: los datos respaldan cada plano. La idea narrativa es que la evidencia visual y la evidencia cuantitativa convergen en el mismo diagnóstico. Los datos no aparecen al principio ni durante el desarrollo porque no se necesita creer en ellos antes de ver; aparecen al final para confirmar que lo visto no fue una excepción. No es una moraleja ni una llamada a la acción: es la escala del problema puesta en cifras después de que la imagen ya la hizo sentir.
           </div>
@@ -1313,9 +1620,13 @@
               <p>El paso del rumor urbano al silencio es el único momento de descanso del documental, pero ese descanso es también una forma de duelo: la ciudad no se detiene, pero el documental sí puede hacerlo. Las cifras sobre negro funcionan como un epitafio: después de doce minutos de mostrar la desigualdad, los números solo confirman que no era una impresión. El título final "<em>Turno"</em>sobre el negro es el último gesto: no hay nada después de esto; el ciclo sigue, pero el documental termina donde no puede seguir.</p>
             </div>
           </details>
+            </div>
+          </div>
         </div>
       </div>
 
+    </div>
+      </div>
     </div>
   </div><!-- / bloque-4 -->
 
@@ -1326,6 +1637,71 @@
   <div class="footer-left">Escaleta propuesta para el documental <em>Turno</em> · Lima y la desigualdad del tiempo urbano</div>
   <div class="footer-right">Samuel Ramirez · Lima, Perú · 2026 · 12'00"</div>
 </footer>
+
+<script>
+  // Scroll progress bar
+  const progressBar = document.getElementById('progressBar');
+  const backToTop = document.getElementById('backToTop');
+
+  function onScroll() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = pct + '%';
+    backToTop.classList.toggle('visible', scrollTop > 400);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Collapsible act blocks
+  document.querySelectorAll('.act-header[data-toggle]').forEach(header => {
+    const targetId = header.getAttribute('data-toggle');
+    const body = document.getElementById(targetId);
+    const toggle = () => {
+      const collapsed = body.classList.toggle('collapsed');
+      header.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    };
+    header.addEventListener('click', toggle);
+    header.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggle();
+      }
+    });
+  });
+
+  // Collapsible seq-card content
+  document.querySelectorAll('.seq-header[data-toggle="seq"]').forEach(header => {
+    const card = header.closest('.seq-card');
+    const content = card.querySelector('.seq-content');
+    header.addEventListener('click', () => {
+      const collapsed = content.classList.toggle('collapsed');
+      card.classList.toggle('collapsed', collapsed);
+    });
+  });
+
+  const revealEls = document.querySelectorAll('.reveal');
+  revealEls.forEach((el, i) => {
+    if (el.classList.contains('seq-card')) {
+      el.style.setProperty('--reveal-delay', (i % 4) * 0.08 + 's');
+    }
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  revealEls.forEach(el => observer.observe(el));
+</script>
 
 </body>
 </html>
